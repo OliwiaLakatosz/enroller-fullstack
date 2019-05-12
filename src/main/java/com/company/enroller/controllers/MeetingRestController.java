@@ -8,6 +8,7 @@ import com.company.enroller.persistence.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -49,7 +50,8 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteMeeting(@PathVariable("id") String meetingId) {
+        long id = Long.parseLong(meetingId);
         Meeting meeting = meetingService.getMeetingById(id);
         if (meeting == null) {
             return new ResponseEntity<>("Meeting does not exist.", HttpStatus.NOT_FOUND);
@@ -59,9 +61,10 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateMeeting(@PathVariable("id") long id,
+    public ResponseEntity<?> updateMeeting(@PathVariable("id") String id,
                                            @RequestBody Meeting incomingMeeting) {
-        Meeting meeting = meetingService.getMeetingById(id);
+        long meetingId = Long.parseLong(id);
+        Meeting meeting = meetingService.getMeetingById(meetingId);
         if (meeting == null) {
             return new ResponseEntity<>("Meeting does not exist.", HttpStatus.NOT_FOUND);
         }
@@ -73,11 +76,11 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.POST)
-    public ResponseEntity<?> addParticipantToMeeting(@PathVariable("meetingId") String meetingId,
-                                                     @RequestParam String login) {
+    public ResponseEntity<?> addParticipantToMeeting(@PathVariable("meetingId") String meetingId) {
+        String currentUserName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long id = Long.parseLong(meetingId);
         Meeting meeting = meetingService.getMeetingById(id);
-        Participant participant = participantService.findByLogin(login);
+        Participant participant = participantService.findByLogin(currentUserName);
         if (meeting == null) {
             return new ResponseEntity<>("Meeting does not exist.", HttpStatus.NOT_FOUND);
         }
@@ -91,10 +94,11 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeParticipantFromMeeting(@PathVariable("meetingId") long meetingId,
-                                                     @RequestParam String login) {
-        Meeting meeting = meetingService.getMeetingById(meetingId);
-        Participant participant = participantService.findByLogin(login);
+    public ResponseEntity<?> removeParticipantFromMeeting(@PathVariable("meetingId") String meetingId) {
+        String currentUserName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long id = Long.parseLong(meetingId);
+        Meeting meeting = meetingService.getMeetingById(id);
+        Participant participant = participantService.findByLogin(currentUserName);
         if (meeting == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -102,15 +106,15 @@ public class MeetingRestController {
             return new ResponseEntity<>("Participant with this login does not exist.", HttpStatus.NOT_FOUND);
         }
 
-        meetingService.removeParticipantFromMeeting(meetingId, participant);
+        meetingService.removeParticipantFromMeeting(id, participant);
         meetingService.update(meeting);
         return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.GET)
-    public ResponseEntity<?> getMeetingParticipants(@PathVariable("meetingId") long meetingId) {
-
-        Collection<Participant> participants = meetingService.getMeetingParticipants(meetingId);
+    public ResponseEntity<?> getMeetingParticipants(@PathVariable("meetingId") String meetingId) {
+        long id = Long.parseLong(meetingId);
+        Collection<Participant> participants = meetingService.getMeetingParticipants(id);
         if (participants == null) {
             return new ResponseEntity<>("Couldn't find any participants for meeting with id=" + meetingId, HttpStatus.NOT_FOUND);
         }

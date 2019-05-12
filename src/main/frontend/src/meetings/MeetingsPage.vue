@@ -29,30 +29,37 @@
                 meetings: []
             };
         },
+        mounted() {
+            this.getMeetings();
+        },
         methods: {
             addNewMeeting(meeting) {
-                this.meetings.push(meeting);
                 this.$http.post('meetings', meeting)
                     .then(reposnse => {
                         this.meetings.push(response.body);
                     });
+                this.meetings.push(meeting);
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);
-                let url = 'meetings/' + meeting.id.toString() + '/participants?login=' + this.username;
-                this.$http.post(url) //meeting.id - undefined?
+                let url = 'meetings/' + meeting.id.toString() + '/participants';
+                this.$http.post(url, {params: {login: this.username}}) //meeting.id - undefined?
                     .then(response => {
                         meeting.participants.push(response.body)
                     });
             },
             removeMeetingParticipant(meeting) {
-                // meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
                 this.$http.delete('meetings/' + meeting.id.toString() + "/participants?login=", this.username) // //meeting.id - undefined?
                     .then(response => {
                         meeting.participants.splice(meeting.participants.indexOf(this.username), 1)
                     });
+                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
             },
             deleteMeeting(meeting) {
+                this.$http.delete('meetings/' + meeting.id.toString())
+                    .then(response => {
+                        this.meetings.splice(this.meetings.indexOf(meeting), 1);
+                    });
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
             },
             getMeetings() {
@@ -65,8 +72,6 @@
                     });
             }
         },
-        mounted() {
-            this.getMeetings();
-        }
+
     }
 </script>
