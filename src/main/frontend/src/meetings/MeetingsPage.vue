@@ -29,9 +29,6 @@
                 meetings: []
             };
         },
-        mounted() {
-            this.getMeetings();
-        },
         methods: {
             addNewMeeting(meeting) {
                 this.$http.post('meetings', meeting)
@@ -39,6 +36,7 @@
                         this.meetings.push(response.body);
                     });
                 this.meetings.push(meeting);
+                this.getMeetings();
             },
             addMeetingParticipant(meeting) {
                 meeting.participants.push(this.username);
@@ -47,13 +45,15 @@
                     .then(response => {
                         meeting.participants.push(response.body)
                     });
+                this.getMeetings();
             },
             removeMeetingParticipant(meeting) {
                 this.$http.delete('meetings/' + meeting.id.toString() + "/participants?login=", this.username) // //meeting.id - undefined?
                     .then(response => {
                         meeting.participants.splice(meeting.participants.indexOf(this.username), 1)
                     });
-                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);                this.getMeetings();
+                this.getMeetings();
             },
             deleteMeeting(meeting) {
                 this.$http.delete('meetings/' + meeting.id.toString())
@@ -61,6 +61,7 @@
                         this.meetings.splice(this.meetings.indexOf(meeting), 1);
                     });
                 this.meetings.splice(this.meetings.indexOf(meeting), 1);
+                this.getMeetings();
             },
             getMeetings() {
                 this.$http.get('meetings')
@@ -72,6 +73,8 @@
                     });
             }
         },
-
+        mounted() {
+            this.$nextTick(this.getMeetings());
+        },
     }
 </script>

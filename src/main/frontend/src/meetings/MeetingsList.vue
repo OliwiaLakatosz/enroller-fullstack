@@ -17,7 +17,7 @@
       <td>
         <ul v-if="meeting.participants">
           <li v-for="participant in meeting.participants" :key="participant">
-            {{ participant }}
+            {{ participant.login }}
           </li>
         </ul>
       </td>
