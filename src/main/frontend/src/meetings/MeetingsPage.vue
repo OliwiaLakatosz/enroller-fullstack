@@ -2,7 +2,7 @@
   <div>
     <new-meeting-form @added="addNewMeeting($event)"></new-meeting-form>
 
-    <span v-if="meetings.length == 0">
+    <span v-if="meetings.length === 0">
                Brak zaplanowanych spotkań.
            </span>
     <h3 v-else>
@@ -32,18 +32,17 @@
         methods: {
             addNewMeeting(meeting) {
                 this.$http.post('meetings', meeting)
-                    .then(reposnse => {
+                    .then(response => {
                         this.meetings.push(response.body);
                     });
-                this.meetings.push(meeting);
                 this.getMeetings();
             },
             addMeetingParticipant(meeting) {
-                meeting.participants.push(this.username);
+                // meeting.participants.push(this.username);
                 let url = 'meetings/' + meeting.id.toString() + '/participants';
                 this.$http.post(url, {params: {login: this.username}}) //meeting.id - undefined?
                     .then(response => {
-                        meeting.participants.push(response.body)
+                        meeting.participants.push(response.body, this.username)
                     });
                 this.getMeetings();
             },
@@ -68,9 +67,6 @@
                     .then(response => {
                         this.meetings = response.body;
                     })
-                    .catch(response => {
-                        this.failure('Błąd przy wyświetlaniu listy. Kod odpowiedzi: ' + response.status)
-                    });
             }
         },
         mounted() {

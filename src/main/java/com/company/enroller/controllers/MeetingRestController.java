@@ -46,7 +46,7 @@ public class MeetingRestController {
         }
 
         meetingService.add(meeting);
-        return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
+        return new ResponseEntity<>(meeting, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -76,7 +76,7 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.POST)
-    public ResponseEntity<?> addParticipantToMeeting(@PathVariable("meetingId") String meetingId) {
+    public ResponseEntity<?> addMeetingParticipant(@PathVariable("meetingId") String meetingId) {
         String currentUserName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long id = Long.parseLong(meetingId);
         Meeting meeting = meetingService.getMeetingById(id);
@@ -94,7 +94,7 @@ public class MeetingRestController {
     }
 
     @RequestMapping(value = "/{meetingId}/participants", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeParticipantFromMeeting(@PathVariable("meetingId") String meetingId) {
+    public ResponseEntity<?> removeMeetingParticipant(@PathVariable("meetingId") String meetingId) {
         String currentUserName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long id = Long.parseLong(meetingId);
         Meeting meeting = meetingService.getMeetingById(id);

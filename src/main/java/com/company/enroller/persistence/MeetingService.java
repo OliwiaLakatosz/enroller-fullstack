@@ -29,7 +29,7 @@ public class MeetingService {
 		connector = DatabaseConnector.getInstance();
 	}
 
-	public Collection<Meeting> getAll() {
+	public List getAll() {
 		return connector.getSession().createCriteria(Meeting.class).list();
 	}
 
