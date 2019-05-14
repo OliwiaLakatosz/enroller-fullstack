@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -25,8 +26,8 @@ public class MeetingRestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getMeetings() {
-        Collection<Meeting> meetings = meetingService.getAll();
-        return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
+        List meetings = meetingService.getAll();
+        return new ResponseEntity<>(meetings, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -86,6 +87,9 @@ public class MeetingRestController {
         }
         if (participant == null) {
             return new ResponseEntity<>("Participant with this login does not exist.", HttpStatus.NOT_FOUND);
+        }
+        if (meeting.getParticipants().contains(participant)) {
+            return new ResponseEntity<>("Participant already enrolled", HttpStatus.CONFLICT);
         }
 
         meetingService.addParticipantToMeeting(id, participant);
