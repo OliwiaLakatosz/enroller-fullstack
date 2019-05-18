@@ -51,7 +51,7 @@
                     .then(response => {
                         meeting.participants.splice(meeting.participants.indexOf(this.username), 1)
                     });
-                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);                this.getMeetings();
+                meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
                 this.getMeetings();
             },
             deleteMeeting(meeting) {

@@ -70,7 +70,7 @@ public class MeetingService {
 	    Meeting meeting = this.getMeetingById(id);
 	    meeting.addParticipant(participant);
 	    connector.getSession().save(meeting);
-	    connector.getSession().save(participant);
+//	    connector.getSession().save(participant);
 	    transaction.commit();
     }
 
