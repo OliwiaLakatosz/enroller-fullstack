@@ -7,7 +7,8 @@
       <label>Opis</label>
       <textarea v-model="newMeeting.description"></textarea>
       <label>Data</label>
-      <input type="text" v-model="newMeeting.date">
+      <input type="date" v-model="newMeeting.date" id="date-picker">
+      <br>
       <button>Dodaj</button>
       <span class="error" v-if="error">Spotkanie musi mieć nazwę!</span>
     </form>
@@ -42,5 +43,12 @@
 <style scoped>
   .error {
     color: #F00;
+  }
+  #date-picker {
+    border: 0.1rem solid #d1d1d1;
+    border-radius: .4rem;
+    height: 3.8rem;
+    padding: .6rem 1.0rem;
+    width: 21%;
   }
 </style>
