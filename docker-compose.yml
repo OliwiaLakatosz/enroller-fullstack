@@ -2,10 +2,15 @@ version: "3.7"
 services:
   frontend:
     build:
-      context: .
+      context: src/main/frontend
       dockerfile: Dockerfile
     image: s4ros/froncik
     ports:
       - 1234:8088
+
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
 
       
