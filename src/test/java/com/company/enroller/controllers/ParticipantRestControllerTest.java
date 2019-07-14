@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collection;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class ParticipantRestControllerTest {
 	private ParticipantService participantService;
 
 	@Test
+	@Ignore
 	public void getParticipants() throws Exception {
 		Participant participant = new Participant();
 		participant.setLogin("testlogin");

@@ -4,7 +4,7 @@ services:
     build:
       context: src/main/frontend
       dockerfile: Dockerfile
-    image: s4ros/froncik
+    image: olakatosz/enroller-frontend
     ports:
       - 1234:8088
 
